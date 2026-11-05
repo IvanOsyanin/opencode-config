@@ -1,0 +1,33 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "openrouter": {
+      "models": {
+        "openai/gpt-6.1-sol": {
+          "body": {
+            "provider": {
+              "require_parameters": true
+            }
+          }
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "body": {
+            "provider": {
+              "require_parameters": true
+            }
+          }
+        },
+        "openai/gpt-6.1-terra": {
+          "body": {
+            "provider": {
+              "require_parameters": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "experimental": {
+    "subagent_depth": 2
+  }
+}
