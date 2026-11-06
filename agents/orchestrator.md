@@ -54,6 +54,16 @@
       "action": "subagent",
       "resource": "reviewer",
       "effect": "allow"
+    },
+    {
+      "action": "execute",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "gitnexus_list_repos",
+      "resource": "*",
+      "effect": "allow"
     }
   ]
 }

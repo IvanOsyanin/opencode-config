@@ -134,6 +134,16 @@
       "action": "execute",
       "resource": "*",
       "effect": "deny"
+    },
+    {
+      "action": "execute",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "gitnexus_*",
+      "resource": "*",
+      "effect": "allow"
     }
   ]
 }
