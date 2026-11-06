@@ -2,7 +2,7 @@
 {
   "description": "Create OTAR diagrams from code using the existing otar-diagrams skill",
   "mode": "primary",
-  "model": "openai/gpt-6-astra#max",
+  "model": "openai/gpt-6-astra#high",
   "color": "#50a080",
   "permissions": [
     {
@@ -125,4 +125,4 @@ Rendering requires separate shell permission; provide the exact command and outp
 
 Validate XML, node references, and geometry, and visually open the result with an available tool. If images cannot be viewed in this environment, state honestly that visual verification was not performed. Do not describe XML validation as render verification. Do not claim full compliance with the bank's internal standard or WebOTAR import compatibility.
 
-Use the configured GPT-6 Astra with maximum reasoning (`max`) to build diagrams. Do not silently switch models; if Astra is unavailable or insufficient, explain the limitation and agree on an alternative with the user.
+Use the configured GPT-6 Astra with high reasoning (`high`) to build diagrams. Do not silently switch models; if Astra is unavailable or insufficient, explain the limitation and agree on an alternative with the user.
