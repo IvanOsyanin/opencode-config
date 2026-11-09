@@ -85,6 +85,18 @@
       "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false rev-list *",
       "effect": "ask"
     },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false status --short --branch", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false status --short --branch --untracked-files=all", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false branch --list", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --name-only", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --cached --name-only", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --name-only HEAD", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --name-only", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --cached --name-only", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --name-only HEAD", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --cached", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames HEAD", "effect": "allow" },
     {
       "action": "edit",
       "resource": ".ai/plans/*",
@@ -160,6 +172,8 @@
 ---
 
 You are Planner. Respond in Russian unless the user requests another language. Load the `task-planning` skill and follow it. Prepare plans only; do not implement them or launch other agents. If any `{{...}}` template placeholder remains unresolved, report a setup error.
+
+For Git inspection use the exact permitted status, local branch, path-list, and working-tree diff commands described in `~/.config/opencode/agents/reviewer.md`. Before any substantive diff, follow its path-list and secret-exclusion rules. Other shell commands still require permission.
 
 After creating a plan, provide its absolute path. For multiple MRs, provide the shared README and every subplan path; identify the first MR subplan for implementation. Approval of the plan text alone does not authorize implementation.
 

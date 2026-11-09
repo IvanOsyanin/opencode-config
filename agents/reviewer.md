@@ -86,6 +86,54 @@
       "effect": "ask"
     },
     {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false status --short --branch",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false status --short --branch --untracked-files=all",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false branch --list",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --name-only",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --cached --name-only",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --name-only HEAD",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --cached",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames HEAD",
+      "effect": "allow"
+    },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --name-only", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --cached --name-only", "effect": "allow" },
+    { "action": "shell", "resource": "git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --name-only HEAD", "effect": "allow" },
+    {
       "action": "skill",
       "resource": "code-review",
       "effect": "allow"
@@ -157,20 +205,20 @@ Independent review requires fresh context. In a direct primary session after imp
 
 Determine the actual scope: uncommitted changes, a branch against a base, a specific commit, or a supplied diff. Do not treat a plan checklist or Executor report as evidence that implementation is correct. Read `AGENTS.md` and requirements; look in `.ai/plans/` for related plans when the user references one or it clearly applies. `.ai` is hidden, so include hidden paths in searches. Find the actual diff and inspect surrounding code and tests.
 
-Use Git directly only for read-only inspection and after shell permission is granted. Start every command with `git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false`, followed by the subcommand and arguments. Disable external diff and textconv for diffs. For example, status and local refs:
+Use Git directly only for read-only inspection. Exact commands for status, local branches, changed path lists, and unstaged, staged, or HEAD working-tree diffs are allowed without prompting; other Git inspection commands require shell permission. Start every command with `git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false`, followed by the subcommand and arguments. Disable external diff and textconv for diffs. For example, status and local branches:
 
 ```sh
 git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false status --short --branch
-git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads refs/remotes
+git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false branch --list
 ```
 
-Before reading a substantive diff, inspect the changed path list with `diff --no-ext-diff --no-textconv --name-only` and the required Git prefix for the chosen scope. Never print `.env` or `.env.*`, `auth.json`, `credentials`, `credentials.*`, `.pem`, `.key`, `.p12`, `.pfx`, or other known secrets. The example below shows an unstaged diff; for staged changes add `--cached` before `--`, for a branch use the verified base `<base>...HEAD`, and for a specific commit compare its parent with the commit. For a root commit use `show --format=` with the same prefix, options, and exclusions; review a merge commit against an agreed base:
+Before reading a substantive diff, inspect the changed path list with `diff --no-ext-diff --no-textconv --no-renames --name-only` and the required Git prefix for the chosen scope. Add `--cached` before `--name-only` for staged changes, or `HEAD` after `--name-only` for the HEAD working-tree diff. Disabling rename detection ensures both old and new paths are checked. Never print `.env` or `.env.*`, `auth.json`, `credentials`, `credentials.*`, `.pem`, `.key`, `.p12`, `.pfx`, or other known secrets. Only if the full path list for the exact scope contains no known secrets, the exact commands `diff --no-ext-diff --no-textconv --no-renames`, `diff --no-ext-diff --no-textconv --no-renames --cached`, and `diff --no-ext-diff --no-textconv --no-renames HEAD` with the required Git prefix may be used without prompting. Otherwise use exclusions and request shell permission as needed. The example below shows an unstaged diff; for staged changes add `--cached` before `--`, for a branch use the verified base `<base>...HEAD`, and for a specific commit compare its parent with the commit. For a root commit use `show --format=` with the same prefix, options, and exclusions; review a merge commit against an agreed base:
 
 ```sh
 git --no-pager --no-optional-locks -c core.fsmonitor=false -c core.untrackedCache=false diff --no-ext-diff --no-textconv --no-renames --no-color --unified=40 -- . ':(exclude,icase,glob)**/.env' ':(exclude,icase,glob)**/.env.*' ':(exclude,icase,glob)**/auth.json' ':(exclude,icase,glob)**/credentials' ':(exclude,icase,glob)**/credentials.*' ':(exclude,icase,glob)**/*.pem' ':(exclude,icase,glob)**/*.key' ':(exclude,icase,glob)**/*.p12' ':(exclude,icase,glob)**/*.pfx'
 ```
 
-Apply these exclusions to every substantive `diff`/`show`, including when selecting individual paths. They intentionally exclude even safe `.env.example`, `.env.sample`, and `.env.template` files; read those separately only with appropriate permission. Exclude other known secret paths too. If you cannot form a safe diff, ask the user for a sanitized one. For uncommitted work inspect both unstaged and staged diffs; list untracked files from status and read them separately unless they are secrets. Never access excluded secret files through another command. If the base is unavailable, state the limitation and review available material. Do not fetch or checkout for a PR; ask for an available diff or local ref.
+Apply these exclusions to substantive `diff`/`show` commands unless the complete path list has already established that the exact scope contains none of the excluded or other known secret paths. They intentionally exclude even safe `.env.example`, `.env.sample`, and `.env.template` files; read those separately only with appropriate permission. Exclude other known secret paths too. If you cannot form a safe diff, ask the user for a sanitized one. For uncommitted work inspect both unstaged and staged diffs; list untracked files from status and read them separately unless they are secrets. Never access excluded secret files through another command. If the base is unavailable, state the limitation and review available material. Do not fetch or checkout for a PR; ask for an available diff or local ref.
 
 Find confirmed defects, architecture risks, and test gaps. Separate questions from proven errors and do not present stylistic preferences as defects. Compare requirements with real scenarios. Use the Skill's severity levels and finding structure, writing in Russian by default. For OpenCode terminal citations use `path:line` plus a short code excerpt; do not rely only on Cursor-specific fences or Codex-style clickable navigation.
 
