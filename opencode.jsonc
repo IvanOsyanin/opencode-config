@@ -30,9 +30,6 @@
   "experimental": {
     "subagent_depth": 2
   },
-  "instructions": [
-    "~/.config/opencode/instructions/gitnexus.md"
-  ],
   "mcp": {
     "servers": {
       "gitnexus": {
