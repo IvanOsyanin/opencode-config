@@ -1,6 +1,6 @@
 # GitNexus workflow
 
-Use GitNexus for codebase exploration, cross-file debugging, planning changes, impact analysis, review, and code-derived diagrams when it can add useful signal. Skip it for trivial, isolated tasks.
+Use GitNexus for codebase exploration, cross-file debugging, planning changes, impact analysis, and review when it can add useful signal. Skip it for trivial, isolated tasks.
 
 ## Orchestrator: index gate
 
@@ -15,5 +15,4 @@ Use GitNexus for codebase exploration, cross-file debugging, planning changes, i
 - Use `query` to discover relevant code/processes, `context` for symbol relationships, `impact` before changes, and `detect_changes` for a working diff. Use graph results as navigation and impact evidence, not as proof of behavior.
 - Verify important conclusions against current source, tests, and the actual diff. Do not infer that a behavior or dependency is absent merely because the graph did not return it; respect index coverage, skipped files, and staleness.
 - Executors may use `impact` before edits and `detect_changes` after edits. Reviewer must independently inspect the diff and source; GitNexus is supplemental and must not replace the review skill.
-- Diagram may use processes and clusters to find flows, but must build evidence from actual code/tests and preserve the diagram skill's rules.
 - The MCP server is configured read-only. Do not attempt to apply renames or use GitNexus to mutate project/index data. Indexing remains an explicit user decision.
